@@ -102,7 +102,7 @@ void TWRClass::routingSpeakerChannel(SPK_Channel ch)
 }
 
 
-void TWRClass::routingWav(uint8_t *wavBuffer, size_t wavSize, uint32_t sampleRate) {
+void TWRClass::routingWav(int *wavBuffer, size_t wavSize, uint32_t sampleRate) {
     // Mikrofonkanal zum Radio routen
     routingMicrophoneChannel(TWR_MIC_TO_ESP); 
 
@@ -114,7 +114,7 @@ void TWRClass::routingWav(uint8_t *wavBuffer, size_t wavSize, uint32_t sampleRat
     // WAV-Daten verarbeiten (Header überspringen)
     size_t dataStart = 44; // WAV-Header
     for (size_t i = dataStart; i < wavSize; i++) {
-        analogWrite(MIC_CTRL_PIN, wavBuffer[i]); // Audio an SA868
+        ledcWrite(MIC_CTRL_PIN, wavBuffer[i]); // Audio an SA868
         delayMicroseconds(1000000 / sampleRate);  // Timing an Abtastrate anpassen
     }
 }

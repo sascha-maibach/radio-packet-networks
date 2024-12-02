@@ -13,12 +13,16 @@
 #include <BLEServer.h>
 #include <Arduino.h>
 #include <math.h>
+#include "packet.h"
 
 extern uint8_t wavBuffer[];
 extern size_t wavIndex;
 extern bool wavFileReady;
 extern double fskArray[];
 
+extern int bitpack[];
+extern bool bitready;
+extern List list;
 
 #define MAX_WAV_SIZE 1024 * 50
 #define BLE_SERVICE_UUID        "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
@@ -39,6 +43,10 @@ public:
             size_t length = value.length();
             if (wavIndex + length < MAX_WAV_SIZE) {
                 memcpy(&wavBuffer[wavIndex], value.c_str(), length);
+                memcpy(&bitpack, value.c_str(), length);
+                list.insert(bitpack);
+                bitready = true;
+                
                 wavIndex += length;
 
                 Serial.print("Empfangene Daten: ");

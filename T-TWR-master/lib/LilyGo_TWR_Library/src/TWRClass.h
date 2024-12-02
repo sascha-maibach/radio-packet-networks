@@ -130,7 +130,7 @@ public:
 
     void routingSpeakerChannel(SPK_Channel ch);
 
-    void routingWav(uint8_t *wavBuffer, size_t wavSize, uint32_t sampleRate = 8000);
+    void routingWav(int *wavBuffer, size_t wavSize, uint32_t sampleRate = 8000);
 
     bool begin(TWR_Model model = LILYGO_TWR_AUTO);
 

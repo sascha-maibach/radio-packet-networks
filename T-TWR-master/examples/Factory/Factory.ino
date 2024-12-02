@@ -9,6 +9,7 @@
  * * Menu inspired by https://giltesa.com/2020/09/07/menu-grafico-para-pantalla-oled-en-arduino
  */
 
+#include "packet.h"
 #include <U8g2lib.h>
 #include <Rotary.h>
 #include <TinyGPS++.h>
@@ -28,6 +29,7 @@
 #include <SPIFFS.h>
 #include "Constants.h"
 #include "WebIndex.h"
+
 
 
 #define DEBUG_PORT Serial    // Output debugging information
@@ -87,8 +89,13 @@ void printMain();
 void printPowerOFF();
 Button readButton();
 
+int bitpack[512];
+bool bitready = false;
+
+List list;
+
 uint8_t wavBuffer[1024 * 50];
-double fskArray[1024 * 50];  // Puffer für WAV-Datei
+//double fskArray[1024 * 50];  // Puffer für WAV-Datei
 size_t wavIndex = 0;            // Aktueller Index im Puffer
 bool wavFileReady = false;    
 
@@ -634,14 +641,23 @@ void loop()
         btnPressed = readButton();
         printMain();
 
-        if (wavFileReady) {
+        //if (wavFileReady) {
+            //strip.setPixelColor(0, strip.Color(255, 0, 0));
+            //strip.show();
+            //Serial.print("Nach wav ready");
+            //twr.routingWav(wavBuffer, wavIndex);
+            //strip.clear();
+            //strip.show();
+            //wavFileReady = false;
+        //}
+
+        if (list.getHead() != nullptr) {
+            Serial.print("bip");
             strip.setPixelColor(0, strip.Color(255, 0, 0));
             strip.show();
-            Serial.print("Nach wav ready");
-            twr.routingWav(wavBuffer, wavIndex);
+            twr.routingWav(list.get(), 512);
             strip.clear();
             strip.show();
-            wavFileReady = false;
         }
 
         // DeepSleep test , About ~660uA
@@ -926,7 +942,7 @@ void demoLed( uint8_t menuSelect )
             u8g2.drawFrame(13, 30, 102, 12);
             u8g2.drawFrame(14, 31, 100, 10);
 
-            uint32_t bar = map(value, 0, 255, 0, 100);
+            uint32_t bar = ::map(value, 0, 255, 0, 100);
             for ( int x = 0 ; x < bar ; x++ ) {
                 u8g2.drawVLine(15 + x, 32, 8);
             }
@@ -970,7 +986,7 @@ void demoSpeaker( uint8_t menuSelect )
             u8g2.drawFrame(13, 30, 102, 12);
             u8g2.drawFrame(14, 31, 100, 10);
 
-            uint32_t bar = map(value, 100, 3000, 0, 100);
+            uint32_t bar = ::map(value, 100, 3000, 0, 100);
             for ( int x = 0 ; x < bar ; x++ ) {
                 u8g2.drawVLine(15 + x, 32, 8);
             }
@@ -1017,7 +1033,7 @@ void demoOled( uint8_t menuSelect )
             drawHeader(menuSelect);
             u8g2.drawFrame(13, 30, 102, 12);
             u8g2.drawFrame(14, 31, 100, 10);
-            uint32_t bar = map(value, 0, 250, 0, 100);
+            uint32_t bar = ::map(value, 0, 250, 0, 100);
             for ( int x = 0 ; x < bar ; x++ ) {
                 u8g2.drawVLine(15 + x, 32, 8);
             }
@@ -1081,7 +1097,7 @@ void demoAlarm(uint8_t menuSelect )
             u8g2.drawFrame(13, 30, 102, 12);
             u8g2.drawFrame(14, 31, 100, 10);
 
-            uint32_t bar = map(value, 100, 2000, 0, 100);
+            uint32_t bar = ::map(value, 100, 2000, 0, 100);
             for ( int x = 0 ; x < bar ; x++ ) {
                 u8g2.drawVLine(15 + x, 32, 8);
             }
@@ -1618,7 +1634,7 @@ void demoSquelchLevel(uint8_t menuSelect)
             u8g2.drawFrame(13, 30, 102, 12);
             u8g2.drawFrame(14, 31, 100, 10);
 
-            uint32_t bar = map(value, 0, 8, 0, 100);
+            uint32_t bar = ::map(value, 0, 8, 0, 100);
             for ( int x = 0 ; x < bar ; x++ ) {
                 u8g2.drawVLine(15 + x, 32, 8);
             }
