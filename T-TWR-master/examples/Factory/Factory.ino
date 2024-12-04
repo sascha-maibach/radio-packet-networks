@@ -649,11 +649,16 @@ void loop()
             try {
                 int* cont = list.get();
                 for (int i = 0; i<512; i++) {
+                    //ausklammern maybe?
                     array[i%64] = cont[i];
                     if (i%64 == 0) {
                         Serial.print("vor sendung");
                         twr.routingWav(array, 64, 44100);
                     }
+                    //To test plz
+                    twr.routingMicrophoneChannel(TWRClass::TWR_MIC_TO_ESP);
+                    note_t note = (note_t) cont[i];
+                    ledcWriteNote(0,note, 4);
             }
             }catch (const std::exception& e) {
                 Serial.print("Error in list.get() oder im senden");
