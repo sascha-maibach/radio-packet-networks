@@ -456,22 +456,6 @@ void setupOLED(uint8_t addr)
     } while (b < twr.pdat.dispBrightness);
 }
 
-bool parseWavHeader(uint8_t *buffer, WavHeader &header) {
-    memcpy(&header, buffer, sizeof(WavHeader));
-
-    if (strncmp(header.riff, "RIFF", 4) != 0 || strncmp(header.wave, "WAVE", 4) != 0) {
-        Serial.println("Kein gültiges WAV-Format");
-        return false;
-    }
-
-    Serial.print("Abtastrate: ");
-    Serial.println(header.sampleRate);
-    Serial.print("Kanäle: ");
-    Serial.println(header.numChannels);
-    Serial.print("Bits/Sample: ");
-    Serial.println(header.bitsPerSample);
-    return true;
-}
 
 void setup()
 {
@@ -641,6 +625,8 @@ void loop()
         btnPressed = readButton();
         printMain();
 
+        // alte funktion mit zwischenspeicher:
+
         //if (wavFileReady) {
             //strip.setPixelColor(0, strip.Color(255, 0, 0));
             //strip.show();
@@ -651,13 +637,32 @@ void loop()
             //wavFileReady = false;
         //}
 
-        if (list.getHead() != nullptr) {
+        //list.getHead() != nullptr
+
+        //Direckt sender Hier speichert alles in Linded list und arbeitet diese ab:
+        if (bitready) {
             Serial.print("bip");
             strip.setPixelColor(0, strip.Color(255, 0, 0));
             strip.show();
-            twr.routingWav(list.get(), 512);
+            int array[64];
+            
+            try {
+                int* cont = list.get();
+                for (int i = 0; i<512; i++) {
+                    array[i%64] = cont[i];
+                    if (i%64 == 0) {
+                        Serial.print("vor sendung");
+                        twr.routingWav(array, 64, 44100);
+                    }
+            }
+            }catch (const std::exception& e) {
+                Serial.print("Error in list.get() oder im senden");
+            }
             strip.clear();
             strip.show();
+            if(list.getHead() == nullptr){
+                wavFileReady == false;
+            }
         }
 
         // DeepSleep test , About ~660uA

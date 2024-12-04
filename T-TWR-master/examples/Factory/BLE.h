@@ -42,9 +42,11 @@ public:
             // Daten in den Puffer schreiben
             size_t length = value.length();
             if (wavIndex + length < MAX_WAV_SIZE) {
-                memcpy(&wavBuffer[wavIndex], value.c_str(), length);
-                memcpy(&bitpack, value.c_str(), length);
+                //memcpy(&wavBuffer[wavIndex], value.c_str(), length);
+                memcpy(&bitpack[0], value.c_str(), length);
+                Serial.print("nach copy");
                 list.insert(bitpack);
+                Serial.print("Nach list insert");
                 bitready = true;
                 
                 wavIndex += length;
@@ -71,15 +73,7 @@ public:
         return data.find("END_OF_WAV") != std::string::npos; // Beispiel-Ende-Markierung
     }
 
-    // Funkübertragung der WAV-Daten
-    void sendWavOverRadio(const uint8_t *data, size_t length) {
-        // Beispiel: Funkübertragung implementieren (z. B. LoRa, WiFi)
-        Serial.print("Übertrage ");
-        Serial.print(length);
-        Serial.println(" Bytes über Funk.");
-        // Hier Funk-API einfügen (z. B. LoRa-Sendung)
-    }
-
+    //deine modulations funkiton:
     void fsk_modulation(uint8_t binary_array[], double* fskArray) {
         int Fs = 1000; // Samples per second
         int fc = 30; // carrier freq 30 Hz

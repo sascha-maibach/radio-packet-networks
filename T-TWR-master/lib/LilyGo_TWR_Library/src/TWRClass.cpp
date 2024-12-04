@@ -101,20 +101,24 @@ void TWRClass::routingSpeakerChannel(SPK_Channel ch)
     }
 }
 
-
+// Zuständig fürs senden, nimmt den pointer zum zu sendendem Array und dessen grösse, sowie die Sampling rate für den delay
 void TWRClass::routingWav(int *wavBuffer, size_t wavSize, uint32_t sampleRate) {
     // Mikrofonkanal zum Radio routen
     routingMicrophoneChannel(TWR_MIC_TO_ESP); 
+    twr.selectEsp2Amp(true); // Verstärker aktivieren
+    twr.routingSpeakerChannel(TWR_ESP_TO_SPK);
 
+    
     Serial.println("Starte WAV-Übertragung...");
 
     // Senden aktivieren
     radio.transmit();
 
-    // WAV-Daten verarbeiten (Header überspringen)
-    size_t dataStart = 44; // WAV-Header
+    //hier wird gesendent.
+    size_t dataStart = 0; // WAV-Header
     for (size_t i = dataStart; i < wavSize; i++) {
         ledcWrite(MIC_CTRL_PIN, wavBuffer[i]); // Audio an SA868
+        ledcWrite(ESP32_PWM_TONE, wavBuffer[i]); // Audio an lautsprecher
         delayMicroseconds(1000000 / sampleRate);  // Timing an Abtastrate anpassen
     }
 }
