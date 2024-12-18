@@ -609,7 +609,7 @@ void setup()
 
     // Create a rotary encoder processing task
     xTaskCreate(rotaryTask, "rotary", 10 * 1024, NULL, 10, &rotaryHandler);
-
+    BLE::enableBLE();
 }
 
 
