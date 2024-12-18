@@ -651,7 +651,8 @@ void loop()
                 for (int i = 0; i<512; i++) {
                     array[i%64] = cont[i];
                     if (i%64 == 0) {
-                        twr.routingWav(array, 64, 44100);
+                        //twr.routingWav(array, 64, 44100);
+                        playMessage(ESP2SA868_MIC, 0, (char*) wavBuffer[i]);
                     }
             }
             }catch (const std::exception& e) {
