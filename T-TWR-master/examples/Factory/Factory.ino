@@ -641,23 +641,21 @@ void loop()
 
         //Direckt sender Hier speichert alles in Linded list und arbeitet diese ab:
         if (bitready) {
-            Serial.print("bip");
+            Serial.print("bip\n");
             strip.setPixelColor(0, strip.Color(255, 0, 0));
             strip.show();
             int array[64];
             
             try {
-                beep();
                 int* cont = list.get();
                 for (int i = 0; i<512; i++) {
                     array[i%64] = cont[i];
                     if (i%64 == 0) {
-                        Serial.print("vor sendung");
                         twr.routingWav(array, 64, 44100);
                     }
             }
             }catch (const std::exception& e) {
-                Serial.print("Error in list.get() oder im senden");
+                Serial.print("Error in list.get() oder im senden\n");
             }
             strip.clear();
             strip.show();
@@ -2145,4 +2143,18 @@ void drawError(uint8_t menuSelect)
             u8g2.print(F("REV2.0 NOT SUPPORT"));
         } while ( u8g2.nextPage() );
     } while ( btnPressed != LongPress );
+}
+
+void playMessage(uint8_t pin, uint8_t channel, String message)
+{
+    ledcAttachPin(pin, channel);
+    for (uint8_t i = 0; i < message.length(); i++) {
+        if (message[i] == '0') {
+            ledcWriteTone(channel, 100);
+        } else {
+            ledcWriteTone(channel, 200);
+        }
+        delay(250);
+    }
+    ledcDetachPin(pin);
 }
