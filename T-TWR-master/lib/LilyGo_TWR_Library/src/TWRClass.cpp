@@ -117,8 +117,8 @@ void TWRClass::routingWav(int *wavBuffer, size_t wavSize, uint32_t sampleRate) {
     //hier wird gesendent.
     size_t dataStart = 0; // WAV-Header
     for (size_t i = dataStart; i < wavSize; i++) {
-        ledcWrite(MIC_CTRL_PIN, wavBuffer[i]); // Audio an SA868
-        ledcWrite(ESP32_PWM_TONE, wavBuffer[i]); // Audio an lautsprecher
+        analogWrite(MIC_CTRL_PIN, wavBuffer[i]); // Audio an SA868
+        analogWrite(ESP32_PWM_TONE, wavBuffer[i]); // Audio an lautsprecher
         delayMicroseconds(1000000 / sampleRate);  // Timing an Abtastrate anpassen
     }
 }
