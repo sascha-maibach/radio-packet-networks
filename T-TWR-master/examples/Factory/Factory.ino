@@ -86,8 +86,9 @@ void loop() {
                 uint8_t cont[5] = {0,1,0,1,0}; //list.get();
                 for (int i = 0; i<5; i++) {                
                     //twr.routingWav(array, 64, 44100);
+                    radio.transmit();
                     playMessage(ESP2SA868_MIC, 0, cont);
-                
+                    radio.receive();
                 }
             }catch (const std::exception& e) {
                 Serial.print("Error in list.get() oder im senden\n");
@@ -126,21 +127,13 @@ void setupOLED(uint8_t addr)
 
 void playMessage(uint8_t pin, uint8_t channel, uint8_t message[])
 {
-    Serial.print("In Play Message\r\n");
     ledcAttachPin(pin, channel);
     int length = sizeof(message)/sizeof(message[0]);
-    Serial.printf("message length: %d", length);
     for (uint8_t i = 0; i < length; i++) {
-        Serial.print("in playmessage loop: \r\n");
-        Serial.printf("message[i]: %d",message[i]);
         if (message[i] == 0) {
-            Serial.print("play 0");
             ledcWriteTone(channel, 100);
-            delay(1000);  
         } else {
-            Serial.print("play else");
             ledcWriteTone(channel, 200);
-            delay(1000);  
         }
         delay(250);
     }
