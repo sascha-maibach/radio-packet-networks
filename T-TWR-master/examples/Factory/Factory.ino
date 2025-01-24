@@ -84,7 +84,8 @@ void loop() {
 
             try {
                 uint8_t* cont = list.get();
-                for (int i = 0; i<5; i++) {                
+                int length = sizeof(cont)/sizeof(cont[0]);
+                for (int i = 0; i<length; i++) {                
                     //twr.routingWav(array, 64, 44100);
                     radio.transmit();
                     playMessage(ESP2SA868_MIC, 0, cont);
