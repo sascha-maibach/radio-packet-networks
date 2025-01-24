@@ -12,5 +12,3 @@
 
 #include "sa868.h"
 #include "TWRClass.h"
-
-
