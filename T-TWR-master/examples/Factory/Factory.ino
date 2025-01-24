@@ -456,22 +456,6 @@ void setupOLED(uint8_t addr)
     } while (b < twr.pdat.dispBrightness);
 }
 
-bool parseWavHeader(uint8_t *buffer, WavHeader &header) {
-    memcpy(&header, buffer, sizeof(WavHeader));
-
-    if (strncmp(header.riff, "RIFF", 4) != 0 || strncmp(header.wave, "WAVE", 4) != 0) {
-        Serial.println("Kein gültiges WAV-Format");
-        return false;
-    }
-
-    Serial.print("Abtastrate: ");
-    Serial.println(header.sampleRate);
-    Serial.print("Kanäle: ");
-    Serial.println(header.numChannels);
-    Serial.print("Bits/Sample: ");
-    Serial.println(header.bitsPerSample);
-    return true;
-}
 
 void setup()
 {
@@ -625,7 +609,7 @@ void setup()
 
     // Create a rotary encoder processing task
     xTaskCreate(rotaryTask, "rotary", 10 * 1024, NULL, 10, &rotaryHandler);
-
+    BLE::enableBLE();
 }
 
 
@@ -641,6 +625,8 @@ void loop()
         btnPressed = readButton();
         printMain();
 
+        // alte funktion mit zwischenspeicher:
+
         //if (wavFileReady) {
             //strip.setPixelColor(0, strip.Color(255, 0, 0));
             //strip.show();
@@ -651,13 +637,32 @@ void loop()
             //wavFileReady = false;
         //}
 
-        if (list.getHead() != nullptr) {
-            Serial.print("bip");
+        //list.getHead() != nullptr
+
+        //Direckt sender Hier speichert alles in Linded list und arbeitet diese ab:
+        if (bitready) {
+            Serial.print("bip\n");
             strip.setPixelColor(0, strip.Color(255, 0, 0));
             strip.show();
-            twr.routingWav(list.get(), 512);
+            int array[64];
+            
+            try {
+                int* cont = list.get();
+                for (int i = 0; i<512; i++) {
+                    array[i%64] = cont[i];
+                    if (i%64 == 0) {
+                        //twr.routingWav(array, 64, 44100);
+                        playMessage(ESP2SA868_MIC, 0, (char*) wavBuffer[i]);
+                    }
+            }
+            }catch (const std::exception& e) {
+                Serial.print("Error in list.get() oder im senden\n");
+            }
             strip.clear();
             strip.show();
+            if(list.getHead() == nullptr){
+                wavFileReady == false;
+            }
         }
 
         // DeepSleep test , About ~660uA
@@ -2139,4 +2144,18 @@ void drawError(uint8_t menuSelect)
             u8g2.print(F("REV2.0 NOT SUPPORT"));
         } while ( u8g2.nextPage() );
     } while ( btnPressed != LongPress );
+}
+
+void playMessage(uint8_t pin, uint8_t channel, String message)
+{
+    ledcAttachPin(pin, channel);
+    for (uint8_t i = 0; i < message.length(); i++) {
+        if (message[i] == '0') {
+            ledcWriteTone(channel, 100);
+        } else {
+            ledcWriteTone(channel, 200);
+        }
+        delay(250);
+    }
+    ledcDetachPin(pin);
 }

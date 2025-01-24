@@ -3,6 +3,8 @@
 #include <cstring>
 #include <iostream>
 
+
+
 using byte = unsigned char;
 
 using namespace std;
@@ -11,7 +13,7 @@ using namespace std;
 struct packet
 {
     int content[512];
-    packet* next;
+    packet* next = nullptr;
 
 };
 
@@ -35,28 +37,45 @@ class List {
             }
         }
 
+        // fügt den inhalt eines Arrays in die Linked list:
         void insert(int conten[]){
             packet* newPack = new packet;
-            memcpy(newPack->content, conten, 512);
-
-            packet* n = head;
-            if (head == nullptr) {
-                head = newPack;
-                return;
-            }else{
-                while(n->next != nullptr){
-                    n = n->next;
+            std::cout << "in insert" << std::endl;
+            try {
+                for (int i = 0; i<512; i++) {
+                    newPack->content[i] = conten[i];
                 }
-                n->next = newPack;  
+            }catch (const std::exception& e){
+                std::cout << "Error in der übertragung von content" << std::endl;
             }
+            //memcpy(newPack->content, conten, 512);
+           
+            packet* n = head;
+            try{
+                if (head == nullptr) {
+                    head = newPack;
+                    return;
+                }else{
+                    while(n->next != nullptr){
+                        n = n->next;
+                    }
+                    n->next = newPack;  
+                }
+            }catch (const std::exception& e){
+                std::cout << "Error in der suche nach dem letzten element" << std::endl;
+            }
+            
         };
 
+        // gibt den head der list zurück und löscht diesen. setzt das nächste element der lists auf den head.
         int* get() {
-            copy(head->content, head->content + 512, retarray);
             if (head == nullptr) {
                 cout << "List is already empty!" << endl;
                 return retarray;
             }else{
+                for (int i = 0; i<512; i++) {
+                    retarray[i] = head->content[i];
+                }
                 packet* toDelete = head;
                 head = head->next;
                 delete toDelete;
@@ -66,6 +85,7 @@ class List {
             
         }
 
+        //gibt den head zuück:
         packet* getHead() {
             return head;
         }
