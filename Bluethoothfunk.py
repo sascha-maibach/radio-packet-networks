@@ -42,6 +42,6 @@ async def send_wav_to_device(file_path):
 
 # Starte den asyncio-Eventloop
 #asyncio.run(send_string_to_device())
-file_path = "C:/Users/Alphe/Desktop/Uni/Radio Packet Network/radio-packet-networks/T-TWR-master/output2.wav"  # Pfad zur WAV-Datei
+file_path = "T-TWR-master/output2.wav"  # Pfad zur WAV-Datei
 asyncio.run(send_wav_to_device(file_path))
 
