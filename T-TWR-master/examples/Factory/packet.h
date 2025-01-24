@@ -12,7 +12,7 @@ using namespace std;
 
 struct packet
 {
-    int content[512];
+    u_int8_t content[512];
     packet* next = nullptr;
 
 };
@@ -22,7 +22,7 @@ class List {
 
     packet* head;
 
-    int retarray[512];
+    u_int8_t retarray[512];
 
     public:
 
@@ -68,7 +68,7 @@ class List {
         };
 
         // gibt den head der list zurück und löscht diesen. setzt das nächste element der lists auf den head.
-        int* get() {
+        u_int8_t* get() {
             if (head == nullptr) {
                 cout << "List is already empty!" << endl;
                 return retarray;

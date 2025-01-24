@@ -83,7 +83,7 @@ void loop() {
             int array[64];
 
             try {
-                uint8_t cont[5] = {0,1,0,1,0}; //list.get();
+                uint8_t* cont = list.get();
                 for (int i = 0; i<5; i++) {                
                     //twr.routingWav(array, 64, 44100);
                     radio.transmit();
@@ -128,14 +128,19 @@ void setupOLED(uint8_t addr)
 void playMessage(uint8_t pin, uint8_t channel, uint8_t message[])
 {
     ledcAttachPin(pin, channel);
+
     int length = sizeof(message)/sizeof(message[0]);
+    
     for (uint8_t i = 0; i < length; i++) {
+        Serial.printf("inhalt von message[i]: %d",message[i]);
         if (message[i] == 0) {
             ledcWriteTone(channel, 100);
+            //delay(750);
         } else {
-            ledcWriteTone(channel, 200);
+            ledcWriteTone(channel, message[i]);
+            //delay(750);
         }
-        delay(250);
+        //delay(250);
     }
     ledcDetachPin(pin);
 }
