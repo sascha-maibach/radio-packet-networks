@@ -1,3 +1,6 @@
+# 1 "C:\\Users\\Alphe\\AppData\\Local\\Temp\\tmpn82ivhv4"
+#include <Arduino.h>
+# 1 "C:/Users/Alphe/Desktop/Uni/Radio Packet Network/radio-packet-networks/T-TWR-master/examples/Factory/Factory.ino"
 #include "packet.h"
 #include "LilyGo_TWR.h"
 
@@ -13,15 +16,15 @@
 #include "fix_fft.h"
 #include <U8g2lib.h>
 
-#define DEBUG_PORT Serial 
+#define DEBUG_PORT Serial
 
-#define DECLARE_DEMO(function)      void function(uint8_t menuSelect)
-#define U8G2_HOR_ALIGN_CENTER(t)    ((u8g2.getDisplayWidth() - (u8g2.getUTF8Width(t))) / 2)
-#define U8G2_HOR_ALIGN_RIGHT(t)     (u8g2.getDisplayWidth()  -  u8g2.getUTF8Width(t))
+#define DECLARE_DEMO(function) void function(uint8_t menuSelect)
+#define U8G2_HOR_ALIGN_CENTER(t) ((u8g2.getDisplayWidth() - (u8g2.getUTF8Width(t))) / 2)
+#define U8G2_HOR_ALIGN_RIGHT(t) (u8g2.getDisplayWidth() - u8g2.getUTF8Width(t))
 
 using namespace ace_button;
 
-U8G2_SH1106_128X64_NONAME_F_HW_I2C  u8g2(U8G2_R0, U8X8_PIN_NONE);
+U8G2_SH1106_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE);
 
 
 int bitpack[512];
@@ -30,10 +33,14 @@ bool bitready = false;
 List list;
 
 uint8_t wavBuffer[1024 * 50];
-//double fskArray[1024 * 50];  // Puffer für WAV-Datei
-size_t wavIndex = 0;            // Aktueller Index im Puffer
-bool wavFileReady = false;    
 
+size_t wavIndex = 0;
+bool wavFileReady = false;
+void setup();
+void loop();
+void setupOLED(uint8_t addr);
+void playMessage(uint8_t pin, uint8_t channel, uint8_t message[]);
+#line 37 "C:/Users/Alphe/Desktop/Uni/Radio Packet Network/radio-packet-networks/T-TWR-master/examples/Factory/Factory.ino"
 void setup() {
 
     bool rslt = false;
@@ -55,7 +62,7 @@ void setup() {
     Serial.print(twr.getBandDefinition());
     uint8_t addr = twr.getOLEDAddress();
     if ((addr != 0x3C || addr != 0x3D) && !rslt) {
-        // Initialize display
+
         u8g2.setI2CAddress(addr << 1);
         u8g2.begin();
         u8g2.clearBuffer();
@@ -79,15 +86,15 @@ void setup() {
 
 void loop() {
     if (bitready) {
-            //Serial.print("bip\n");
+
             int array[64];
 
             try {
-                uint8_t cont[5] = {0,1,0,1,0}; //list.get();
-                for (int i = 0; i<5; i++) {                
-                    //twr.routingWav(array, 64, 44100);
+                uint8_t cont[5] = {0,1,0,1,0};
+                for (int i = 0; i<5; i++) {
+
                     playMessage(ESP2SA868_MIC, 0, cont);
-                
+
                 }
             }catch (const std::exception& e) {
                 Serial.print("Error in list.get() oder im senden\n");
@@ -99,7 +106,7 @@ void loop() {
 
 }
 
-//========Helper Funktions=================
+
 
 void setupOLED(uint8_t addr)
 {
@@ -136,11 +143,11 @@ void playMessage(uint8_t pin, uint8_t channel, uint8_t message[])
         if (message[i] == 0) {
             Serial.print("play 0");
             ledcWriteTone(channel, 100);
-            delay(1000);  
+            delay(1000);
         } else {
             Serial.print("play else");
             ledcWriteTone(channel, 200);
-            delay(1000);  
+            delay(1000);
         }
         delay(250);
     }
