@@ -132,10 +132,11 @@ void playMessage(uint8_t pin, uint8_t channel, uint8_t message[])
     ledcAttachPin(pin, channel);
 
     int length = sizeof(message)/sizeof(message[0]);
+    uint8_t* bits = IntToBinary(message); // könnte bits falsch speichern... bein test darauf achten
     
     for (uint8_t i = 0; i < length; i++) {
-        Serial.printf("inhalt von message[i]: %d",message[i]);
-        if (message[i] == 0) {
+        Serial.printf("inhalt von bits[i]: %d",bits[i]);
+        if (bits[i] == 0) {
             ledcWriteTone(channel, 100);
             //delay(750);
         } else {
@@ -147,6 +148,7 @@ void playMessage(uint8_t pin, uint8_t channel, uint8_t message[])
     ledcDetachPin(pin);
 }
 
+//Sendet einen Barker code der länge 7.
 void playBarker(uint8_t pin, uint8_t channel)
 {
     ledcAttachPin(pin, channel);
@@ -160,4 +162,25 @@ void playBarker(uint8_t pin, uint8_t channel)
     ledcWriteTone(channel, 100);
     ledcDetachPin(pin);
     Serial.printf("Barker code send \r\n");
+}
+
+//nimmt die message und erstellt ein weiteres array indem die einzelnen bits der integer gespeichert werden. Zur weiterversendung.
+uint8_t* IntToBinary(uint8_t* messages)
+{
+    int length = sizeof(messages)/sizeof(messages[0]);
+    uint8_t bits[length*8];
+    for (int i = 0; i < length*8; i = i + 8) 
+    {
+        // Extrahiere Bit 
+        bits[i] = messages[i] & 0b00000001; 
+        bits[i+1] = (messages[i]& 0b00000010) >> 1; 
+        bits[i+2] = (messages[i] & 0b00000100) >> 2;
+        bits[i+3] = (messages[i] & 0b00001000) >> 3;
+        bits[i+4] = (messages[i] & 0b00010000) >> 4;
+        bits[i+5] = (messages[i] & 0b00100000) >> 5;
+        bits[i+6] = (messages[i] & 0b01000000) >> 6;
+        bits[i+7] = (messages[i] & 0b10000000) >> 7;
+
+    } 
+    return bits;
 }
