@@ -152,14 +152,13 @@ void playMessage(uint8_t pin, uint8_t channel, uint8_t message[])
 void playBarker(uint8_t pin, uint8_t channel)
 {
     ledcAttachPin(pin, channel);
-    ledcWriteTone(channel, 500);
-    ledcWriteTone(channel, 500);
-    ledcWriteTone(channel, 500);
-    ledcWriteTone(channel, 500);
-    ledcWriteTone(channel, 100);
-    ledcWriteTone(channel, 100);
-    ledcWriteTone(channel, 500);
-    ledcWriteTone(channel, 100);
+    ledcWriteTone(channel, 500); //1
+    ledcWriteTone(channel, 500); //1
+    ledcWriteTone(channel, 500); //1
+    ledcWriteTone(channel, 100); //0
+    ledcWriteTone(channel, 100); //0
+    ledcWriteTone(channel, 500); //1
+    ledcWriteTone(channel, 100); //0
     ledcDetachPin(pin);
     Serial.printf("Barker code send \r\n");
 }
