@@ -85,6 +85,7 @@ void loop() {
             try {
                 uint8_t* cont = list.get();
                 int length = sizeof(cont)/sizeof(cont[0]);
+                playBarker(ESP2SA868_MIC, 0); //zur erkennung und synkronisation
                 for (int i = 0; i<length; i++) {                
                     //twr.routingWav(array, 64, 44100);
                     radio.transmit();
@@ -138,10 +139,25 @@ void playMessage(uint8_t pin, uint8_t channel, uint8_t message[])
             ledcWriteTone(channel, 100);
             //delay(750);
         } else {
-            ledcWriteTone(channel, message[i]);
+            ledcWriteTone(channel, 500);
             //delay(750);
         }
         //delay(250);
     }
     ledcDetachPin(pin);
+}
+
+void playBarker(uint8_t pin, uint8_t channel)
+{
+    ledcAttachPin(pin, channel);
+    ledcWriteTone(channel, 500);
+    ledcWriteTone(channel, 500);
+    ledcWriteTone(channel, 500);
+    ledcWriteTone(channel, 500);
+    ledcWriteTone(channel, 100);
+    ledcWriteTone(channel, 100);
+    ledcWriteTone(channel, 500);
+    ledcWriteTone(channel, 100);
+    ledcDetachPin(pin);
+    Serial.printf("Barker code send \r\n");
 }
