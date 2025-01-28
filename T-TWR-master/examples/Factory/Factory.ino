@@ -80,18 +80,21 @@ void setup() {
 void loop() {
     if (bitready) {
             //Serial.print("bip\n");
-            int array[64];
+            // int array[64];
+            uint8_t values_from_bluetooth_array[512];
 
             try {
-                uint8_t* cont = list.get();
-                int length = sizeof(cont)/sizeof(cont[0]);
+                uint8_t* values_from_bluetooth_array = list.get();
+                int length = sizeof(values_from_bluetooth_array)/sizeof(values_from_bluetooth_array[0]);
+                Serial.printf("length of array from list: %d", length);
                 playBarker(ESP2SA868_MIC, 0); //zur erkennung und synkronisation
                 for (int i = 0; i<length; i++) {                
                     //twr.routingWav(array, 64, 44100);
                     radio.transmit();
-                    playMessage(ESP2SA868_MIC, 0, cont);
+                    playMessage(ESP2SA868_MIC, 0, values_from_bluetooth_array);
                     radio.receive();
                 }
+            Serial.printf("length of cont: ", length);
             }catch (const std::exception& e) {
                 Serial.print("Error in list.get() oder im senden\n");
             }
@@ -136,15 +139,18 @@ void playMessage(uint8_t pin, uint8_t channel, uint8_t message[])
     IntToBinary(message, bits); // könnte bits falsch speichern... bein test darauf achten
     
     for (uint8_t i = 0; i < length; i++) {
-        Serial.printf("inhalt von bits[i]: %d",bits[i]);
+        //Serial.printf("inhalt von bits[i]: %d",bits[i]);
+        Serial.printf("Sending %d,        length of array: %d", bits[i], length);
         if (bits[i] == 0) {
             ledcWriteTone(channel, 100);
+            Serial.printf("Sending at frequence: %d\n", ledcReadFreq(channel));
             //delay(750);
         } else {
-            ledcWriteTone(channel, 500);
+            ledcWriteTone(channel, 2000);
+            Serial.printf("Sending at frequence: %d\n", ledcReadFreq(channel));
             //delay(750);
         }
-        //delay(250);
+        delay(2);
     }
     ledcDetachPin(pin);
 }
