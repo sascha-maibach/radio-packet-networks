@@ -37,18 +37,20 @@ public:
     void onWrite(BLECharacteristic *pCharacteristic) override {
         // Empfangene Daten auslesen
         std::string value = pCharacteristic->getValue();
-        Serial.printf("values received via bluetooth: %s\n", value);
+        //Serial.printf("values received via bluetooth: %s\n", value);
 
         if (value.length() > 0) {
             // Daten in den Puffer schreiben
             size_t length = value.length();
             size_t i = 0;
             for (char c : value) {
+                    printf("char %d is: %s\n", i, c);
                     bitpack[i] = static_cast<uint8_t>(c);
-                    i = i +1; 
+                    i = i +1;
             }
+
             
-            Serial.print("nach copy");
+            //Serial.print("nach copy");
             list.insert(bitpack);
             //Serial.print("Nach list insert");
             bitready = true;
