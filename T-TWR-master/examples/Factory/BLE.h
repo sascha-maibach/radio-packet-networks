@@ -41,22 +41,18 @@ public:
         if (value.length() > 0) {
             // Daten in den Puffer schreiben
             size_t length = value.length();
-            if (wavIndex + length < MAX_WAV_SIZE) {
-                //memcpy(&wavBuffer[wavIndex], value.c_str(), length);
-                memcpy(&bitpack[0], value.c_str(), length);
-                Serial.print("nach copy");
-                list.insert(bitpack);
-                Serial.print("Nach list insert");
-                bitready = true;
-                
-                wavIndex += length;
 
-                Serial.print("Empfangene Daten: ");
-                Serial.print(length);
-                Serial.println(" Bytes");
-            } else {
-                Serial.println("Pufferüberlauf! WAV-Datei zu groß.");
+            for (int i = 0; i < length; i++ ) {
+                memcpy(&bitpack[i], value.c_str(), length);   
             }
+            Serial.print("nach copy");
+            list.insert(bitpack);
+            Serial.print("Nach list insert");
+            bitready = true;
+                
+            Serial.print("Empfangene Daten: ");
+            Serial.print(length);
+            Serial.println(" Bytes");
         }
 
         // Wenn WAV-Daten vollständig, starte Funkübertragung
