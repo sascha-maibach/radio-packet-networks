@@ -79,7 +79,7 @@ class List {
                 for (int i = 0; i<512; i++) {
                     retarray[i] = head->content[i];
                 }
-                Serial.printf("size retarray in list class: %d\n", sizeof(retarray)/sizeof(retarray[0]));
+                //Serial.printf("size retarray in list class: %d\n", sizeof(retarray)/sizeof(retarray[0]));
                 head = head->next;
                 return retarray;  
             }
