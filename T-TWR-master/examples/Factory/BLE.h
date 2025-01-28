@@ -44,7 +44,8 @@ public:
             size_t length = value.length();
             size_t i = 0;
             for (char c : value) {
-                    bitpack[i++] = static_cast<uint8_t>(c);
+                printf("char %d in values: %s", i, c);
+                bitpack[i++] = static_cast<uint8_t>(c);
             }
             
             Serial.print("nach copy");
