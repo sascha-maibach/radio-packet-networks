@@ -20,7 +20,6 @@ async def send_string_to_device():
 
 
 async def send_wav_to_device(file_path):
-    """Sendet eine WAV-Datei über Bluetooth an das T-TWR-Gerät."""
     try:
         async with BleakClient(DEVICE_ADDRESS) as client:
             if client.is_connected:
