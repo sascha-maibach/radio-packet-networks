@@ -86,13 +86,13 @@ void loop() {
             try {
                 uint8_t* values_from_bluetooth_array = list.get();
                 int length = sizeof(values_from_bluetooth_array)/sizeof(values_from_bluetooth_array[0]);
-                Serial.printf("length of array from list: %d", length);
+                //Serial.printf("length of array from list: %d\n", length);
                 playBarker(ESP2SA868_MIC, 0); //zur erkennung und synkronisation             
                     //twr.routingWav(array, 64, 44100);
                 radio.transmit();
                 playMessage(ESP2SA868_MIC, 0, values_from_bluetooth_array);
                 radio.receive();
-            Serial.printf("length of cont: ", length);
+            //Serial.printf("length of cont: ", length);
             }catch (const std::exception& e) {
                 Serial.print("Error in list.get() oder im senden\n");
             }
@@ -138,14 +138,14 @@ void playMessage(uint8_t pin, uint8_t channel, uint8_t message[])
     
     for (uint8_t i = 0; i < length; i++) {
         //Serial.printf("inhalt von bits[i]: %d",bits[i]);
-        Serial.printf("Sending %d,        length of array: %d", bits[i], length);
+        //Serial.printf("Sending %d,        length of array: %d\n", bits[i], length);
         if (bits[i] == 0) {
             ledcWriteTone(channel, 100);
-            Serial.printf("Sending at frequence: %d\n", ledcReadFreq(channel));
+            //Serial.printf("Sending at frequence: %d\n", ledcReadFreq(channel));
             //delay(750);
         } else {
             ledcWriteTone(channel, 2000);
-            Serial.printf("Sending at frequence: %d\n", ledcReadFreq(channel));
+            //Serial.printf("Sending at frequence: %d\n", ledcReadFreq(channel));
             //delay(750);
         }
         delay(2);
@@ -165,7 +165,7 @@ void playBarker(uint8_t pin, uint8_t channel)
     ledcWriteTone(channel, 500); //1
     ledcWriteTone(channel, 100); //0
     ledcDetachPin(pin);
-    Serial.printf("Barker code send \r\n");
+    //Serial.printf("Barker code send \r\n");
 }
 
 //nimmt die message und erstellt ein weiteres array indem die einzelnen bits der integer gespeichert werden. Zur weiterversendung.
