@@ -87,13 +87,11 @@ void loop() {
                 uint8_t* values_from_bluetooth_array = list.get();
                 int length = sizeof(values_from_bluetooth_array)/sizeof(values_from_bluetooth_array[0]);
                 Serial.printf("length of array from list: %d", length);
-                playBarker(ESP2SA868_MIC, 0); //zur erkennung und synkronisation
-                for (int i = 0; i<length; i++) {                
+                playBarker(ESP2SA868_MIC, 0); //zur erkennung und synkronisation             
                     //twr.routingWav(array, 64, 44100);
-                    radio.transmit();
-                    playMessage(ESP2SA868_MIC, 0, values_from_bluetooth_array);
-                    radio.receive();
-                }
+                radio.transmit();
+                playMessage(ESP2SA868_MIC, 0, values_from_bluetooth_array);
+                radio.receive();
             Serial.printf("length of cont: ", length);
             }catch (const std::exception& e) {
                 Serial.print("Error in list.get() oder im senden\n");
