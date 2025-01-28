@@ -20,7 +20,7 @@ extern size_t wavIndex;
 extern bool wavFileReady;
 extern double fskArray[];
 
-extern int bitpack[];
+extern uint8_t bitpack[];
 extern bool bitready;
 extern List list;
 
