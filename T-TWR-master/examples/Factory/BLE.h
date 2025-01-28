@@ -42,16 +42,12 @@ public:
         if (value.length() > 0) {
             // Daten in den Puffer schreiben
             size_t length = value.length();
-
+            size_t i = 0;
+            for (char c : value) {
+                    bitpack[i++] = static_cast<uint8_t>(c);
+            }
             
-            for(char& c : value) {
-                printf("value in string: %s", c);
-            }
-
-            for (int i = 0; i < length; i++ ) {
-                memcpy(&bitpack[i], value.c_str(), length);   
-            }
-            //Serial.println("nach copy");
+            Serial.print("nach copy");
             list.insert(bitpack);
             //Serial.print("Nach list insert");
             bitready = true;
