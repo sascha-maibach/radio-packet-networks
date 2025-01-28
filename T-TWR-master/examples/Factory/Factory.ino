@@ -79,24 +79,21 @@ void setup() {
 
 void loop() {
     if (bitready) {
-            //Serial.print("bip\n");
-            // int array[64];
             uint8_t values_from_bluetooth_array[512];
 
             try {
                 uint8_t* values_from_bluetooth_array = list.get();
                 int length = sizeof(values_from_bluetooth_array)/sizeof(values_from_bluetooth_array[0]);
-                //Serial.printf("length of array from list: %d\n", length);
-                playBarker(ESP2SA868_MIC, 0); //zur erkennung und synkronisation             
-                    //twr.routingWav(array, 64, 44100);
+                Serial.printf("length byte message in main loop: %d\n", length);
+                playBarker(ESP2SA868_MIC, 0); //zur erkennung und synkronisatio
+                
                 radio.transmit();
                 playMessage(ESP2SA868_MIC, 0, values_from_bluetooth_array);
                 radio.receive();
-            //Serial.printf("length of cont: ", length);
             }catch (const std::exception& e) {
                 Serial.print("Error in list.get() oder im senden\n");
             }
-            if(list.getHead() == nullptr){
+            if(list.getHead()->next == nullptr){
                 bitready == false;
             }
         }
@@ -135,22 +132,25 @@ void playMessage(uint8_t pin, uint8_t channel, uint8_t message[])
     int length = sizeof(message)/sizeof(message[0]);
     uint8_t bits[8*length];
     IntToBinary(message, bits); // könnte bits falsch speichern... bein test darauf achten
+    Serial.printf("length byte message: %d --- length bit array: %d\n", length, sizeof(bits)/sizeof(bits[0]));
+    Serial.printf("length2 byte message: %d --- length2 bit array: %d\n", sizeof(message), sizeof(bits));
     
     for (uint8_t i = 0; i < length; i++) {
-        //Serial.printf("inhalt von bits[i]: %d",bits[i]);
-        //Serial.printf("Sending %d,        length of array: %d\n", bits[i], length);
+        Serial.printf("inhalt von bits[%d]: %d",i, bits[i]);
         if (bits[i] == 0) {
-            ledcWriteTone(channel, 100);
-            //Serial.printf("Sending at frequence: %d\n", ledcReadFreq(channel));
+            ledcWriteTone(channel, 200);
+            Serial.printf("Sending at frequency: %d\n", ledcReadFreq(channel));
             //delay(750);
         } else {
-            ledcWriteTone(channel, 2000);
-            //Serial.printf("Sending at frequence: %d\n", ledcReadFreq(channel));
+            ledcWriteTone(channel, 1600);
+            Serial.printf("Sending at frequency: %d\n", ledcReadFreq(channel));
             //delay(750);
         }
-        delay(2);
+        delay(100);
     }
+    ledcWriteTone(channel, 0);
     ledcDetachPin(pin);
+    Serial.println("Done.");
 }
 
 //Sendet einen Barker code der länge 7.
@@ -173,17 +173,17 @@ void IntToBinary(uint8_t* messages, uint8_t* bits)
 {
     int length = sizeof(messages)/sizeof(messages[0]);
 
-    for (int i = 0; i < length*8; i = i + 8) 
+    for (int i = 0; i < length; i = i + 8) 
     {
         // Extrahiere Bit 
-        bits[i] = messages[i] & 0b00000001; 
-        bits[i+1] = (messages[i]& 0b00000010) >> 1; 
-        bits[i+2] = (messages[i] & 0b00000100) >> 2;
-        bits[i+3] = (messages[i] & 0b00001000) >> 3;
-        bits[i+4] = (messages[i] & 0b00010000) >> 4;
-        bits[i+5] = (messages[i] & 0b00100000) >> 5;
-        bits[i+6] = (messages[i] & 0b01000000) >> 6;
-        bits[i+7] = (messages[i] & 0b10000000) >> 7;
+        bits[i*8] = messages[i] & 0b00000001; 
+        bits[i*8+1] = (messages[i] & 0b00000010) >> 1; 
+        bits[i*8+2] = (messages[i] & 0b00000100) >> 2;
+        bits[i*8+3] = (messages[i] & 0b00001000) >> 3;
+        bits[i*8+4] = (messages[i] & 0b00010000) >> 4;
+        bits[i*8+5] = (messages[i] & 0b00100000) >> 5;
+        bits[i*8+6] = (messages[i] & 0b01000000) >> 6;
+        bits[i*8+7] = (messages[i] & 0b10000000) >> 7;
 
     }
 }

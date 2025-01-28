@@ -40,7 +40,7 @@ class List {
         // fügt den inhalt eines Arrays in die Linked list:
         void insert(uint8_t conten[]){
             packet* newPack = new packet;
-            std::cout << "in insert" << std::endl;
+            // std::cout << "in insert" << std::endl;
             try {
                 for (int i = 0; i<512; i++) {
                     newPack->content[i] = conten[i];
@@ -76,9 +76,7 @@ class List {
                 for (int i = 0; i<512; i++) {
                     retarray[i] = head->content[i];
                 }
-                packet* toDelete = head;
                 head = head->next;
-                delete toDelete;
                 return retarray;  
             }
 
