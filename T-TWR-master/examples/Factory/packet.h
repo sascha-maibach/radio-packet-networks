@@ -38,7 +38,7 @@ class List {
         }
 
         // fügt den inhalt eines Arrays in die Linked list:
-        void insert(int conten[]){
+        void insert(uint8_t conten[]){
             packet* newPack = new packet;
             std::cout << "in insert" << std::endl;
             try {
