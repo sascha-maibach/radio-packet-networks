@@ -37,16 +37,36 @@ public:
     void onWrite(BLECharacteristic *pCharacteristic) override {
         // Empfangene Daten auslesen
         std::string value = pCharacteristic->getValue();
-        //Serial.printf("values received via bluetooth: %s\n", value);
+        //Serial.printf("length of values: %d\n", value.length());
+        int j = 0;
+
+        /*
+        for (uint8_t x : value) {
+            Serial.printf("Iteration: %d :: value: %d\n", j, x);
+            j++;
+
+        }
+        */
 
         if (value.length() > 0) {
+            //Serial.printf("value.length > 0\n");
             // Daten in den Puffer schreiben
-            size_t length = value.length();
-            size_t i = 0;
-            for (char c : value) {
-                    printf("char %d is: %s\n", i, c);
-                    bitpack[i] = static_cast<uint8_t>(c);
-                    i = i +1;
+            int length = value.length();
+            int i = 0;
+            //Serial.printf("before loop\n");
+            for (uint8_t c : value) {
+                //Serial.printf("loop iteration: %d\n", i);
+                try
+                {
+                    //Serial.printf("char %d is: %s\n", i, c);
+                    bitpack[i] = c;
+                    i++;
+                }
+                catch(const std::exception& e)
+                {
+                    std::cerr << e.what() << '\n';
+                }
+                
             }
 
             
@@ -129,6 +149,7 @@ public:
 
     static void enableBLE()
     {
+        Serial.printf("enabling BLE.. already started:  %d\n", _started);
         if (_started) {
             return;
         }
