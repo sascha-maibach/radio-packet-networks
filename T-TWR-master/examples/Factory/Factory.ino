@@ -132,8 +132,8 @@ void playMessage(uint8_t pin, uint8_t channel, uint8_t message[])
     ledcAttachPin(pin, channel);
 
     int length = sizeof(message)/sizeof(message[0]);
-    uint8_t bits[length*8];
-    bits = IntToBinary(message, bits); // könnte bits falsch speichern... bein test darauf achten
+    uint8_t bits[8*length];
+    IntToBinary(message, bits); // könnte bits falsch speichern... bein test darauf achten
     
     for (uint8_t i = 0; i < length; i++) {
         Serial.printf("inhalt von bits[i]: %d",bits[i]);
@@ -165,7 +165,7 @@ void playBarker(uint8_t pin, uint8_t channel)
 }
 
 //nimmt die message und erstellt ein weiteres array indem die einzelnen bits der integer gespeichert werden. Zur weiterversendung.
-uint8_t* IntToBinary(uint8_t* messages, uint8_t* bits)
+void IntToBinary(uint8_t* messages, uint8_t* bits)
 {
     int length = sizeof(messages)/sizeof(messages[0]);
 
@@ -181,6 +181,5 @@ uint8_t* IntToBinary(uint8_t* messages, uint8_t* bits)
         bits[i+6] = (messages[i] & 0b01000000) >> 6;
         bits[i+7] = (messages[i] & 0b10000000) >> 7;
 
-    } 
-    return bits;
+    }
 }
