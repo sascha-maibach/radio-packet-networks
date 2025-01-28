@@ -79,7 +79,8 @@ void setup() {
 
 void loop() {
     if (bitready) {
-            uint8_t values_from_bluetooth_array[512];
+            //uint8_t values_from_bluetooth_array[512];
+            uint8_t* values_from_bluetooth_array = (uint8_t*) calloc(512, sizeof(uint8_t));
 
             try {
                 uint8_t* values_from_bluetooth_array = list.get();
