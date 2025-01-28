@@ -37,23 +37,26 @@ public:
     void onWrite(BLECharacteristic *pCharacteristic) override {
         // Empfangene Daten auslesen
         std::string value = pCharacteristic->getValue();
-        Serial.printf("values received via bluetooth: %d\n", value);
+        Serial.printf("values received via bluetooth: %s\n", value);
 
         if (value.length() > 0) {
             // Daten in den Puffer schreiben
             size_t length = value.length();
 
+            
+            for(char& c : value) {
+                printf("value in string: %s", c);
+            }
+
             for (int i = 0; i < length; i++ ) {
                 memcpy(&bitpack[i], value.c_str(), length);   
             }
-            Serial.print("nach copy");
+            //Serial.println("nach copy");
             list.insert(bitpack);
-            Serial.print("Nach list insert");
+            //Serial.print("Nach list insert");
             bitready = true;
                 
-            Serial.print("Empfangene Daten: ");
-            Serial.print(length);
-            Serial.println(" Bytes");
+            Serial.printf("Empfangene Daten: %d Bytes\n", length);
         }
 
         // Wenn WAV-Daten vollständig, starte Funkübertragung

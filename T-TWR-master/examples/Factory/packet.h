@@ -70,7 +70,7 @@ class List {
         // gibt den head der list zurück und löscht diesen. setzt das nächste element der lists auf den head.
         u_int8_t* get() {
             if (head == nullptr) {
-                cout << "List is already empty!" << endl;
+                //cout << "List is already empty!" << endl;
                 return retarray;
             }else{
                 for (int i = 0; i<512; i++) {
