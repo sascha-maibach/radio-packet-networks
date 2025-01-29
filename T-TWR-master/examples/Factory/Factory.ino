@@ -78,6 +78,13 @@ void setup() {
 }
 
 void loop() {
+    if(!bitready) {
+            radio.transmit();
+            ledcAttachPin(ESP2SA868_MIC,0);
+            receiverCalibration(ESP2SA868_MIC,0);
+            ledcDetachPin(ESP2SA868_MIC);
+            radio.receive();
+    }
     if (bitready) {
             //uint8_t values_from_bluetooth_array[512];
             uint8_t* values_from_bluetooth_array = (uint8_t*) calloc(512, sizeof(uint8_t));
@@ -134,7 +141,7 @@ void playMessage(uint8_t pin, uint8_t channel, uint8_t message[])
     IntToBinary(message, bits); // könnte bits falsch speichern... bein test darauf achten
     //Serial.printf("length byte message: %d --- length bit array: %d\n", length, sizeof(bits)/sizeof(bits[0]));
     //Serial.printf("length2 byte message: %d --- length2 bit array: %d\n", sizeof(message), sizeof(bits));
-    receiverCalibration(pin,channel);
+
     for (uint8_t i = 0; i < 512; i++) {
         if (i % 100 == 0) {
         Serial.printf("inhalt von bits[%d]: %d\n",i, bits[i]);
