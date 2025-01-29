@@ -1,6 +1,7 @@
 # Liligo-T-TWR Bluetooth Dateiübertragung
 
-Dieses Projekt ermöglicht die drahtlose Übertragung von Dateien über Bluetooth mit dem Liligo-T-TWR.
+Dieses Projekt ermöglicht die drahtlose Übertragung von Dateien über Bluetooth mit dem LILYGO T-TWR und dessen  
+Weiterleitung via Funk.
 
 ## Installation und Einrichtung
 
