@@ -79,12 +79,14 @@ void setup() {
 
 void loop() {
     if(!bitready) {
+
+            
         radio.transmit();
         ledcWriteTone(0, 200);
-        delay(1);
+        delay(100);
         ledcWriteTone(0, 1600);
-        delay(1);
-        radio.receive();
+        delay(100);
+        
     }
     if (bitready) {
             //uint8_t values_from_bluetooth_array[512];
@@ -153,7 +155,7 @@ void playMessage(uint8_t pin, uint8_t channel, uint8_t message[])
         } else {
             ledcWriteTone(channel, 1600);
         }
-        delay(1);
+        delay(100);
     }
     // ledcWriteTone(channel, 0);
     ledcDetachPin(pin);

@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 sdr = RtlSdr()
-sdr.sample_rate = 9e6 # Hz
+sdr.sample_rate = 2e6 # Hz
 sdr.center_freq = 446.2e6   # Hz
 sdr.freq_correction = 30  # PPM
 #print(sdr.valid_gains_db)
