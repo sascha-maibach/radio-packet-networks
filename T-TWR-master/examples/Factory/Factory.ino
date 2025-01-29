@@ -92,7 +92,7 @@ void loop() {
             }catch (const std::exception& e) {
                 Serial.print("Error in list.get() oder im senden\n");
             }
-            if(list.getHead()->next == nullptr){
+            if(list.getHead() == nullptr){
                 bitready == false;
             }
         }
