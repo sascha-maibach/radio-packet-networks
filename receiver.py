@@ -96,7 +96,7 @@ def check_signal(samples, i, fft_size):
         idx = np.argmax(np.abs(fft))        
         freqs = np.fft.fftfreq(len(fft_shift))
         freq = freqs[idx]
-        print(freq)
+        print(freq) # 0.005 # 0.007
         
         if freq > 0:
             # likely frequency of 1, e.g. > 456,200,900
