@@ -192,9 +192,9 @@ void receiverCalibration(uint8_t pin, uint8_t channel){
 
     while (i < 50) {
         ledcWriteTone(0, 200);
-        delay(1);
+        delay(100);
         ledcWriteTone(0, 1600);
-        delay(200);
+        delay(100);
         i++;
     }
     ledcDetachPin(pin);
