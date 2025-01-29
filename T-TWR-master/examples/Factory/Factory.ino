@@ -78,14 +78,6 @@ void setup() {
 }
 
 void loop() {
-    if(!bitready) {
-        radio.transmit();
-        ledcWriteTone(0, 200);
-        delay(1);
-        ledcWriteTone(0, 1600);
-        delay(1);
-        radio.receive();
-    }
     if (bitready) {
             //uint8_t values_from_bluetooth_array[512];
             uint8_t* values_from_bluetooth_array = (uint8_t*) calloc(512, sizeof(uint8_t));
@@ -142,7 +134,7 @@ void playMessage(uint8_t pin, uint8_t channel, uint8_t message[])
     IntToBinary(message, bits); // könnte bits falsch speichern... bein test darauf achten
     //Serial.printf("length byte message: %d --- length bit array: %d\n", length, sizeof(bits)/sizeof(bits[0]));
     //Serial.printf("length2 byte message: %d --- length2 bit array: %d\n", sizeof(message), sizeof(bits));
-    
+    receiverCalibration(pin,channel);
     for (uint8_t i = 0; i < 512; i++) {
         if (i % 100 == 0) {
         Serial.printf("inhalt von bits[%d]: %d\n",i, bits[i]);
@@ -191,4 +183,20 @@ void IntToBinary(uint8_t messages[], uint8_t* bits)
         bits[i*8+7] = (messages[i] & 0b10000000) >> 7;
 
     }
+}
+
+void receiverCalibration(uint8_t pin, uint8_t channel){
+    ledcAttachPin(pin, channel);
+
+    int i = 0;
+
+    while (i < 50) {
+        ledcWriteTone(0, 200);
+        delay(1);
+        ledcWriteTone(0, 1600);
+        delay(200);
+        i++;
+    }
+    ledcDetachPin(pin);
+    
 }
