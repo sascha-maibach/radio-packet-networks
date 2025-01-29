@@ -25,6 +25,18 @@ class Decoder:
         pass
 
 
+    def sample(self):
+        fft_size = 512
+        num_rows = 2048
+        samples = self.sdr.read_samples(2048) # get rid of initial empty samples
+        samples = self.sdr.read_samples(fft_size*num_rows) # get all the samples we need for the spectrogram
+        return samples
+
+    def do_fft(self, samples):
+        spectrogram[i, :] = 10 * np.log10(
+            np.abs(np.fft.fftshift(np.fft.fft(samples[i * fft_size:(i + 1) * fft_size]))) ** 2)
+
+
 
 
 
