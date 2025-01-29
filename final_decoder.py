@@ -121,6 +121,17 @@ class Decoder:
                     else:
                         print("0")
 
+    def extract_frequencies(self):
+        while True:
+            fft, _, _ = self.do_fft(self.sample())  # sample data
+            for j in range(self.num_rows):
+                fft_row = fft[j]
+                frequencies = np.fft.fftfreq(len(fft_row))
+                signal_frequencies = frequencies[fft_row > self.signal_threshold]
+                print(f"{signal_frequencies}\n\n")
+
+
+
 
     def extract_frequencies_stolen_code(self):
 
@@ -190,6 +201,7 @@ if __name__ == "__main__":
     decoder = Decoder()
     decoder.calibrate_signal_strength()
     #decoder.wait_for_user_input()
-    decoder.calibrate_frequencies()
-    decoder.print_binary_signal()
+    #decoder.calibrate_frequencies()
+    #decoder.print_binary_signal()
+    decoder.extract_frequencies()
     print("Done.")
