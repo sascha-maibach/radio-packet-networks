@@ -14,8 +14,8 @@ def sample_from_sdr():
     
     fft_size = 512
     num_rows = 256
-    #x = sdr.read_samples(2048) # get rid of initial empty samples
-    samples = sdr.read_samples(fft_size*num_rows) # get all the samples we need for the spectrogram
+    #x = sdr.read_samples(2048) #
+    samples = sdr.read_samples(fft_size*num_rows) 
     spectrogram = np.zeros((num_rows, fft_size))
     #print(x)
     for i in range(num_rows):

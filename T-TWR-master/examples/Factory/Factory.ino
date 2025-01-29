@@ -83,7 +83,7 @@ void loop() {
             ledcAttachPin(ESP2SA868_MIC,0);
             receiverCalibration(ESP2SA868_MIC,0);
             ledcDetachPin(ESP2SA868_MIC);
-            radio.receive();
+            //radio.receive();
     }
     if (bitready) {
             //uint8_t values_from_bluetooth_array[512];
